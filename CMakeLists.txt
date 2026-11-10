@@ -25,8 +25,17 @@ if(NETGUARD_SANITIZE)
   add_link_options(-fsanitize=address,undefined)
 endif()
 
+# Core library: pcap reading, header decoding, formatting. The CLI and the
+# tests both link it.
+add_library(netguard_core
+  src/pcap_reader.cpp
+  src/decode.cpp
+  src/format.cpp)
+target_include_directories(netguard_core PUBLIC include)
+target_link_libraries(netguard_core PRIVATE netguard_warnings)
+
 add_executable(netguard-cli src/main.cpp)
-target_link_libraries(netguard-cli PRIVATE netguard_warnings)
+target_link_libraries(netguard-cli PRIVATE netguard_core netguard_warnings)
 
 if(NETGUARD_BUILD_TESTS)
   enable_testing()

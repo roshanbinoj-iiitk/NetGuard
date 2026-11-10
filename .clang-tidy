@@ -14,7 +14,9 @@ Checks: >
   -modernize-use-trailing-return-type,
   -readability-identifier-length,
   -readability-function-cognitive-complexity,
-  -cppcoreguidelines-pro-bounds-constant-array-index
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -readability-braces-around-statements,
+  -performance-enum-size
 WarningsAsErrors: ''
 HeaderFilterRegex: '.*/include/netguard/.*'
 FormatStyle: file
