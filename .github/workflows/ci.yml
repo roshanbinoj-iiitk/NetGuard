@@ -24,6 +24,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends cmake ninja-build libgtest-dev tcpdump
 
+      # Newer runner kernels randomise mmap more than older ASan runtimes expect.
+      - name: Make ASan-friendly
+        run: sudo sysctl -w vm.mmap_rnd_bits=28
+
       - name: Configure
         run: >
           cmake -S . -B build -G Ninja
@@ -31,9 +35,10 @@ jobs:
           -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
           -DNETGUARD_WERROR=ON
           -DNETGUARD_SANITIZE=ON
+          -DNETGUARD_REQUIRE_TCPDUMP=ON
 
       - name: Build
         run: cmake --build build
 
-      - name: Unit tests
+      - name: Tests (GoogleTest + tcpdump comparison)
         run: ctest --test-dir build --output-on-failure
